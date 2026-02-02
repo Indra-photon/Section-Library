@@ -1,0 +1,207 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Framekit Section Schema",
+  "description": "Schema for Framekit section registry entries",
+  "type": "object",
+  "required": ["name", "type", "domain", "dependencies", "files", "meta"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z-]+$",
+      "description": "Unique section identifier (e.g., 'ecommerce-hero')"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["registry:section"],
+      "description": "Registry type identifier"
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "ecommerce",
+        "restaurant",
+        "real-estate",
+        "saas",
+        "portfolio",
+        "blog",
+        "agency",
+        "education"
+      ],
+      "description": "Domain category this section belongs to"
+    },
+    "registryDependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Other sections from registry this section depends on",
+      "default": []
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "NPM package dependencies",
+      "default": []
+    },
+    "devDependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "NPM dev dependencies",
+      "default": []
+    },
+    "shadcnDependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Required shadcn/ui components",
+      "default": []
+    },
+    "projectDependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "required"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Component name"
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative path to component"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether this dependency is required"
+          }
+        }
+      },
+      "description": "Project-specific component dependencies",
+      "default": []
+    },
+    "fonts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "required"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Required font files",
+      "default": []
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "content"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "File name"
+          },
+          "content": {
+            "type": "string",
+            "description": "File content (component code)"
+          }
+        }
+      },
+      "description": "Component files to install",
+      "minItems": 1
+    },
+    "meta": {
+      "type": "object",
+      "required": [
+        "label",
+        "description",
+        "tags",
+        "category",
+        "tier",
+        "complexity",
+        "responsive",
+        "darkMode",
+        "uiSkillsCompliant"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Human-readable section name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Section description"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Searchable tags"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "hero",
+            "features",
+            "pricing",
+            "testimonials",
+            "cta",
+            "contact",
+            "footer",
+            "content",
+            "grid",
+            "card",
+            "form",
+            "navigation",
+            "stats",
+            "faq",
+            "gallery",
+            "menu",
+            "other"
+          ],
+          "description": "Section category"
+        },
+        "tier": {
+          "type": "string",
+          "enum": ["free", "pro"],
+          "description": "Access tier"
+        },
+        "complexity": {
+          "type": "string",
+          "enum": ["simple", "moderate", "advanced"],
+          "description": "Implementation complexity"
+        },
+        "responsive": {
+          "type": "boolean",
+          "description": "Mobile responsive"
+        },
+        "darkMode": {
+          "type": "boolean",
+          "description": "Dark mode support"
+        },
+        "animations": {
+          "type": "string",
+          "description": "Animation details (if any)"
+        },
+        "uiSkillsCompliant": {
+          "type": "boolean",
+          "description": "Follows UI_SKILLS.md constraints"
+        }
+      }
+    }
+  }
+}
