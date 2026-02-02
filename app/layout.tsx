@@ -13,6 +13,7 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 import { UserSync } from "@/components/UserSync";
+import { ThemeProvider } from "@/components/theme-provider";
 
 
 const geistSans = Geist({
@@ -93,15 +94,22 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NavBar />
-        <UserSync />
-        {children}
-        <GoogleTagManager gtmId="Your GTM ID" />
-        <Toaster position="top-right" />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NavBar />
+          <UserSync />
+          {children}
+          <GoogleTagManager gtmId="Your GTM ID" />
+          <Toaster position="top-right" />
+        </ThemeProvider>
       </body>
     </html>
     </ClerkProvider>

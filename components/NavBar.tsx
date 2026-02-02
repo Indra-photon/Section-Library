@@ -8,6 +8,7 @@ import { navlinks } from "@/constants/navlinks"
 import { useUserStore } from "@/lib/store"
 import { useClerk } from "@clerk/nextjs"
 import { LogOut, User as UserIcon } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 interface NavItem {
   label: string
@@ -63,7 +64,7 @@ export function NavBar({
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className={`${positionClasses[position]} bg-neutral-200 shadow-4xl z-50 w-full backdrop-blur-5xl border-b border-border/40`}
+        className={`${positionClasses[position]} bg-background/80 dark:bg-background/80 shadow-4xl z-50 w-full backdrop-blur-5xl border-b border-border/40`}
       >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -119,14 +120,15 @@ export function NavBar({
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="hidden md:block"
+              className="hidden md:flex items-center gap-2"
             >
+              <ThemeToggle />
 
               {user !== null ? (
                 <div className="relative" ref={userMenuRef}>
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="inline-block ml-4 text-neutral-800 hover:text-neutral-950 font-medium transition-colors"
+                    className="inline-block ml-4 text-foreground/80 hover:text-foreground font-medium transition-colors"
                   >
                     {user?.name}
                   </button>
@@ -139,25 +141,25 @@ export function NavBar({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50"
+                        className="absolute right-0 mt-2 w-48 bg-card rounded-lg shadow-lg border border-border py-1 z-50"
                       >
                         <Link
                           href="/profile"
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors"
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
                         >
                           <UserIcon size={16} />
                           Profile
                         </Link>
-                        
-                        <div className="border-t border-neutral-200 my-1" />
-                        
+
+                        <div className="border-t border-border my-1" />
+
                         <button
                           onClick={() => {
                             signOut()
                             setIsUserMenuOpen(false)
                           }}
-                          className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                          className="flex items-center gap-3 w-full px-4 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors"
                         >
                           <LogOut size={16} />
                           Sign Out
@@ -168,7 +170,7 @@ export function NavBar({
                 </div>
               ) : (
                 <Link href={"/sign-in"}>
-                  <button className="bg-neutral-700 hover:bg-neutral-900 text-neutral-100 rounded-full border border-neutral-800 font-medium text-lg sm:text-base px-8 py-1 cursor-pointer">
+                  <button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full border border-primary font-medium text-lg sm:text-base px-8 py-1 cursor-pointer transition-colors">
                     Sign In
                   </button>
                 </Link>
@@ -176,16 +178,19 @@ export function NavBar({
 
             </motion.div>
 
-            <motion.button
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-foreground"
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </motion.button>
+            <div className="flex md:hidden items-center gap-2">
+              <ThemeToggle />
+              <motion.button
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 text-foreground"
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </motion.button>
+            </div>
           </div>
         </div>
       </motion.nav>

@@ -1,0 +1,58 @@
+{
+  "$schema": "../schema/section.schema.json",
+  "name": "saas-pricing",
+  "type": "registry:section",
+  "domain": "saas",
+  "registryDependencies": [],
+  "dependencies": [
+    "lucide-react"
+  ],
+  "devDependencies": [],
+  "shadcnDependencies": [
+    "button",
+    "card",
+    "badge"
+  ],
+  "projectDependencies": [
+    {
+      "name": "Heading",
+      "path": "components/Heading.tsx",
+      "required": true
+    },
+    {
+      "name": "Paragraph",
+      "path": "components/Paragraph.tsx",
+      "required": true
+    },
+    {
+      "name": "Container",
+      "path": "components/Container.tsx",
+      "required": true
+    }
+  ],
+  "fonts": [
+    {
+      "name": "CalSans",
+      "path": "fonts/CalSans-SemiBold.woff2",
+      "required": true
+    }
+  ],
+  "files": [
+    {
+      "name": "saas-pricing.tsx",
+      "content": "import React from 'react';\nimport { Button } from '@/components/ui/button';\nimport { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';\nimport { Badge } from '@/components/ui/badge';\nimport { Heading } from '@/components/Heading';\nimport { Paragraph } from '@/components/Paragraph';\nimport { Container } from '@/components/Container';\nimport { Check } from 'lucide-react';\nimport { cn } from '@/lib/utils';\n\ninterface PricingTier {\n  name: string;\n  price: string;\n  description: string;\n  features: string[];\n  cta: string;\n  ctaLink: string;\n  popular?: boolean;\n}\n\ninterface SaasPricingProps {\n  title: string;\n  subtitle?: string;\n  tiers: PricingTier[];\n}\n\nexport function SaasPricing({ title, subtitle, tiers }: SaasPricingProps) {\n  return (\n    <section className=\"py-20 bg-background\">\n      <Container>\n        <div className=\"space-y-12\">\n          <div className=\"text-center space-y-4\">\n            <Heading className=\"text-balance\">{title}</Heading>\n            {subtitle && (\n              <Paragraph className=\"text-pretty max-w-2xl mx-auto text-muted-foreground\">\n                {subtitle}\n              </Paragraph>\n            )}\n          </div>\n          \n          <div className=\"grid md:grid-cols-2 lg:grid-cols-3 gap-8\">\n            {tiers.map((tier, index) => (\n              <Card\n                key={index}\n                className={cn(\n                  'relative flex flex-col',\n                  tier.popular && 'border-primary shadow-lg dark:shadow-primary/20'\n                )}\n              >\n                {tier.popular && (\n                  <Badge className=\"absolute -top-3 left-1/2 -translate-x-1/2\">\n                    Most Popular\n                  </Badge>\n                )}\n                \n                <CardHeader>\n                  <CardTitle>{tier.name}</CardTitle>\n                  <CardDescription>{tier.description}</CardDescription>\n                </CardHeader>\n                \n                <CardContent className=\"flex-1 space-y-6\">\n                  <div>\n                    <span className=\"text-4xl font-bold tabular-nums\">{tier.price}</span>\n                    {tier.price !== 'Custom' && <span className=\"text-muted-foreground\">/month</span>}\n                  </div>\n                  \n                  <ul className=\"space-y-3\">\n                    {tier.features.map((feature, idx) => (\n                      <li key={idx} className=\"flex gap-3\">\n                        <Check className=\"size-5 shrink-0 text-primary\" aria-hidden=\"true\" />\n                        <span className=\"text-sm text-foreground\">{feature}</span>\n                      </li>\n                    ))}\n                  </ul>\n                </CardContent>\n                \n                <CardFooter>\n                  <Button\n                    className=\"w-full\"\n                    variant={tier.popular ? 'default' : 'outline'}\n                    asChild\n                  >\n                    <a href={tier.ctaLink}>{tier.cta}</a>\n                  </Button>\n                </CardFooter>\n              </Card>\n            ))}\n          </div>\n        </div>\n      </Container>\n    </section>\n  );\n}\n"
+    }
+  ],
+  "meta": {
+    "label": "SaaS Pricing",
+    "description": "Pricing table with tier cards, features list, and CTAs",
+    "tags": ["pricing", "saas", "subscription", "plans", "features"],
+    "category": "pricing",
+    "tier": "free",
+    "complexity": "simple",
+    "responsive": true,
+    "darkMode": true,
+    "animations": "None (follows UI_SKILLS - no animation unless requested)",
+    "uiSkillsCompliant": true
+  }
+}
