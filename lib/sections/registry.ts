@@ -61,6 +61,28 @@ export function getSectionsByDomain() {
 }
 
 /**
+ * Get all sections organized by domain and then by category
+ */
+export function getSectionsByDomainAndCategory() {
+  const byDomainAndCategory: Record<string, Record<string, SectionComponent[]>> = {};
+
+  Object.entries(sectionRegistry).forEach(([id, section]) => {
+    const domain = section.metadata.domain;
+    const category = section.metadata.category;
+
+    if (!byDomainAndCategory[domain]) {
+      byDomainAndCategory[domain] = {};
+    }
+    if (!byDomainAndCategory[domain][category]) {
+      byDomainAndCategory[domain][category] = [];
+    }
+    byDomainAndCategory[domain][category].push(section);
+  });
+
+  return byDomainAndCategory;
+}
+
+/**
  * Get all sections organized by category
  */
 export function getSectionsByCategory() {
