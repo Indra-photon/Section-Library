@@ -8,8 +8,10 @@ import { CodeBlock } from '@/components/code-block';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Container } from '@/components/Container';
-import { ArrowLeft, Code2, Eye, Terminal, Sparkles, Package } from 'lucide-react';
+import { ArrowLeft, Code2, Eye, Terminal } from 'lucide-react';
 
 interface SectionDetailClientProps {
   metadata: SectionMetadata;
@@ -22,8 +24,6 @@ interface SectionDetailClientProps {
   children: React.ReactNode;
 }
 
-type Tab = 'preview' | 'code' | 'cli';
-
 export function SectionDetailClient({
   metadata,
   sectionId,
@@ -34,8 +34,6 @@ export function SectionDetailClient({
   previewProps,
   children,
 }: SectionDetailClientProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('preview');
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -46,16 +44,10 @@ export function SectionDetailClient({
               <Link href="/showcase">
                 <Button variant="ghost" size="sm">
                   <ArrowLeft className="size-4 mr-2" />
-                  Back
+                  Back to Showcase
                 </Button>
               </Link>
-              <Separator orientation="vertical" className="h-6" />
-              <div>
-                <h1 className="text-xl font-bold text-foreground">{metadata.name}</h1>
-                <p className="text-sm text-muted-foreground">{metadata.description}</p>
-              </div>
             </div>
-
             <div className="flex items-center gap-2">
               <Badge variant="secondary">{metadata.domain}</Badge>
               <Badge variant="outline">{metadata.category}</Badge>
@@ -67,133 +59,37 @@ export function SectionDetailClient({
         </Container>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-border">
-        <Container>
-          <div className="flex items-center gap-1 py-2">
-            <Button
-              variant={activeTab === 'preview' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('preview')}
-              className="gap-2"
-            >
-              <Eye className="size-4" />
-              Preview
-            </Button>
-            <Button
-              variant={activeTab === 'code' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('code')}
-              className="gap-2"
-            >
-              <Code2 className="size-4" />
-              Code
-            </Button>
-            <Button
-              variant={activeTab === 'cli' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('cli')}
-              className="gap-2"
-            >
-              <Terminal className="size-4" />
-              CLI
-            </Button>
-          </div>
-        </Container>
-      </div>
+      <Container className="py-8">
+        {/* Title and Description */}
+        <div className="mb-8 max-w-4xl mx-auto">
+          <h1 className="text-4xl font-bold text-foreground mb-2">{metadata.name}</h1>
+          <p className="text-lg text-muted-foreground">{metadata.description}</p>
+        </div>
 
-      {/* Content */}
-      <div className="py-8">
-        {activeTab === 'preview' && (
-          <div className="space-y-8">
-            {/* Preview */}
-            <div className="border border-border rounded-lg overflow-hidden bg-background">
-              {children}
-            </div>
+        {/* Main Content - Centered */}
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Preview and Code Tabs */}
+          <Tabs defaultValue="preview" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="preview" className="gap-2">
+                <Eye className="size-4" />
+                Preview
+              </TabsTrigger>
+              <TabsTrigger value="code" className="gap-2">
+                <Code2 className="size-4" />
+                Code
+              </TabsTrigger>
+            </TabsList>
 
-            {/* Metadata */}
-            <Container>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                    <Sparkles className="size-5" />
-                    Details
-                  </h3>
-                  <dl className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Complexity:</dt>
-                      <dd className="font-medium text-foreground capitalize">{metadata.complexity}</dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Responsive:</dt>
-                      <dd className="font-medium text-foreground">{metadata.responsive ? 'Yes' : 'No'}</dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Dark Mode:</dt>
-                      <dd className="font-medium text-foreground">{metadata.darkMode ? 'Yes' : 'No'}</dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Animations:</dt>
-                      <dd className="font-medium text-foreground">{metadata.animations ? 'Yes' : 'No'}</dd>
-                    </div>
-                  </dl>
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                    <Package className="size-5" />
-                    Dependencies
-                  </h3>
-                  <div className="space-y-3">
-                    {metadata.dependencies.npm && metadata.dependencies.npm.length > 0 && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">NPM Packages:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {metadata.dependencies.npm.map((dep) => (
-                            <Badge key={dep} variant="outline" className="font-mono text-xs">
-                              {dep}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {metadata.dependencies.shadcn && metadata.dependencies.shadcn.length > 0 && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Shadcn UI:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {metadata.dependencies.shadcn.map((dep) => (
-                            <Badge key={dep} variant="outline" className="font-mono text-xs">
-                              {dep}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+            <TabsContent value="preview" className="mt-6">
+              <div className="border border-border rounded-lg overflow-hidden bg-background">
+                {children}
               </div>
+            </TabsContent>
 
-              {metadata.tags.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">Tags:</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {metadata.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </Container>
-          </div>
-        )}
-
-        {activeTab === 'code' && (
-          <Container>
-            <div className="space-y-6">
+            <TabsContent value="code" className="mt-6 space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-foreground mb-4">Component Code</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-3">Component</h3>
                 <CodeBlock
                   code={sourceCode.component}
                   language="typescript"
@@ -202,7 +98,7 @@ export function SectionDetailClient({
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-foreground mb-4">Metadata</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-3">Metadata</h3>
                 <CodeBlock
                   code={sourceCode.metadata}
                   language="typescript"
@@ -211,68 +107,120 @@ export function SectionDetailClient({
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-foreground mb-4">Preview Data</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-3">Preview Data</h3>
                 <CodeBlock
                   code={sourceCode.previewData}
                   language="typescript"
                   fileName="preview-data.ts"
                 />
               </div>
-            </div>
-          </Container>
-        )}
+            </TabsContent>
+          </Tabs>
 
-        {activeTab === 'cli' && (
-          <Container>
-            <div className="space-y-8 max-w-3xl">
-              <div>
-                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Terminal className="size-5" />
-                  Quick Install
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Use this command to quickly add the section to your project:
-                </p>
+          {/* Installation Section */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground mb-2 flex items-center gap-2">
+                <Terminal className="size-6" />
+                Installation
+              </h2>
+              <p className="text-muted-foreground">
+                Follow these steps to add this component to your project
+              </p>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>CLI Installation (Coming Soon)</CardTitle>
+                <CardDescription>
+                  Use our CLI tool to automatically install this component with all dependencies
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
                 <CodeBlock
                   code={installCommand}
                   language="bash"
                   showLineNumbers={false}
                 />
-                <p className="text-xs text-muted-foreground mt-2">
-                  * Coming soon - This will install the section with all dependencies
+                <p className="text-xs text-muted-foreground mt-3">
+                  This command will be available soon and will handle all installation steps automatically
                 </p>
-              </div>
+              </CardContent>
+            </Card>
 
-              <Separator />
-
-              <div>
-                <h3 className="text-lg font-semibold text-foreground mb-4">Manual Installation</h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm font-medium text-foreground mb-2">1. Install dependencies</p>
-                    {manualSteps.slice(0, 2).map((step, i) => (
-                      <div key={i} className="mb-2">
-                        <CodeBlock code={step} language="bash" showLineNumbers={false} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Manual Installation</CardTitle>
+                <CardDescription>
+                  Install the component manually by following these steps
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Step 1: Install Dependencies */}
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="flex items-center justify-center size-6 rounded-full bg-primary text-primary-foreground text-sm font-semibold shrink-0">
+                      1
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-foreground mb-2">
+                        Install Dependencies
+                      </h4>
+                      <div className="space-y-2">
+                        {manualSteps.slice(0, 2).map((step, i) => (
+                          <CodeBlock
+                            key={i}
+                            code={step}
+                            language="bash"
+                            showLineNumbers={false}
+                          />
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
+                </div>
 
-                  <div>
-                    <p className="text-sm font-medium text-foreground mb-2">2. Copy the component</p>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Create the file and paste the component code from the Code tab.
-                    </p>
-                    <CodeBlock
-                      code={`lib/sections/${metadata.domain}/${sectionId}/component.tsx`}
-                      language="bash"
-                      showLineNumbers={false}
-                    />
+                <Separator />
+
+                {/* Step 2: Copy Component */}
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="flex items-center justify-center size-6 rounded-full bg-primary text-primary-foreground text-sm font-semibold shrink-0">
+                      2
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-foreground mb-2">
+                        Copy the Component Code
+                      </h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Create the following file and paste the component code from the Code tab above
+                      </p>
+                      <CodeBlock
+                        code={`lib/sections/${metadata.domain}/${metadata.category}/component.tsx`}
+                        language="bash"
+                        showLineNumbers={false}
+                      />
+                    </div>
                   </div>
+                </div>
 
-                  <div>
-                    <p className="text-sm font-medium text-foreground mb-2">3. Import and use</p>
-                    <CodeBlock
-                      code={`import { ${componentName} } from '@/lib/sections/${metadata.domain}/${sectionId}';
+                <Separator />
+
+                {/* Step 3: Import and Use */}
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="flex items-center justify-center size-6 rounded-full bg-primary text-primary-foreground text-sm font-semibold shrink-0">
+                      3
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-foreground mb-2">
+                        Import and Use the Component
+                      </h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Import the component in your page and use it with the required props
+                      </p>
+                      <CodeBlock
+                        code={`import { ${componentName} } from '@/lib/sections/${metadata.domain}/${metadata.category}';
 
 export default function Page() {
   return (
@@ -290,16 +238,17 @@ export default function Page() {
     />
   );
 }`}
-                      language="typescript"
-                      showLineNumbers={false}
-                    />
+                        language="typescript"
+                        showLineNumbers={false}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </Container>
-        )}
-      </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </Container>
     </div>
   );
 }

@@ -1,45 +1,51 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ShowcaseSidebar } from '@/components/showcase-sidebar';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { sectionRegistry } from '@/lib/sections/registry';
 import { ExternalLink } from 'lucide-react';
+import { Container } from '@/components/Container';
 
 export default function ShowcasePage() {
-  // Get all sections from the registry
-  const sections = Object.entries(sectionRegistry);
+  const searchParams = useSearchParams();
+  const domainFilter = searchParams.get('domain');
+
+  // Get all sections from the registry and filter by domain if specified
+  const allSections = Object.entries(sectionRegistry);
+  const sections = domainFilter
+    ? allSections.filter(([, section]) => section.metadata.domain === domainFilter)
+    : allSections;
 
   return (
     <div className="flex min-h-screen">
-      <ShowcaseSidebar />
+      <ShowcaseSidebar activeDomain={domainFilter} />
 
-      <main className="flex-1 overflow-y-auto">
-        {sections.map(([id, section], index) => {
-          const Component = section.component;
-          const props = section.previewData;
+      <Container className="flex-1 overflow-y-auto max-w-5xl mx-auto">
+        {sections.length > 0 ? (
+          sections.map(([id, section], index) => {
+            const Component = section.component;
+            const props = section.previewData;
 
-          return (
-            <div key={id}>
-              {index > 0 && <Separator className="my-0" />}
-              <div id={id} className="relative group">
-                <Component {...props} />
-                <Link href={`/sections/${id}`}>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                  >
-                    <ExternalLink className="size-4 mr-2" />
-                    View Details
-                  </Button>
-                </Link>
+            return (
+              <div key={id}>
+                {index > 0 && <Separator className="my-0" />}
+                <div id={id} className="relative group">
+                  <Component {...props} />
+                </div>
               </div>
+            );
+          })
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <p className="text-lg text-muted-foreground">No sections found for this domain</p>
             </div>
-          );
-        })}
-      </main>
+          </div>
+        )}
+      </Container>
     </div>
   );
 }
