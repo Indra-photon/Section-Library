@@ -520,10 +520,10 @@ const Prism: React.FC<PrismProps> = ({
               transition={{ duration: 0.5, delay: 0.4 }}
               className="flex flex-col sm:flex-row items-center gap-4 pt-4"
             >
-              <Link href="/showcase?domain=ecommerce">
+              <Link href="/hero">
                 <Button size="lg" className="group relative overflow-hidden">
                   <span className="relative z-10 flex items-center gap-2">
-                    Browse Showcase
+                    Browse Sections
                     <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                   <motion.div
@@ -535,9 +535,9 @@ const Prism: React.FC<PrismProps> = ({
                 </Button>
               </Link>
 
-              <Link href="/sections">
+              <Link href="#sections">
                 <Button size="lg" variant="outline" className="group">
-                  View All Sections
+                  Explore Below
                 </Button>
               </Link>
             </motion.div>

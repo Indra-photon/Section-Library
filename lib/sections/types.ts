@@ -1,30 +1,37 @@
+import { ReactElement } from 'react';
+
+/**
+ * Section metadata
+ */
 export interface SectionMetadata {
-  id: string;
-  name: string;
+  id: string; // e.g., "hero-batman", "footer-minimal"
+  name: string; // Display name
   description: string;
-  domain: 'ecommerce' | 'portfolio' | 'restaurant' | 'saas' | 'real-estate' | 'blog' | 'agency' | 'education';
-  category: 'hero' | 'pricing' | 'menu' | 'features' | 'testimonials' | 'cta' | 'faq' | 'footer' | 'contact';
+  sectionType: 'hero' | 'footer' | 'navbar' | 'testimonials' | 'pricing' | 'features' | 'cta' | 'faq';
   tier: 'free' | 'pro';
   complexity: 'simple' | 'moderate' | 'complex';
   tags: string[];
   dependencies: {
-    npm?: string[];
-    shadcn?: string[];
-    projectComponents?: string[];
+    npm: string[];
+    shadcn: string[];
+    projectComponents: string[];
     fonts?: string[];
   };
   responsive: boolean;
   darkMode: boolean;
   animations: boolean;
-  previewData?: any;
 }
 
+/**
+ * Section component with metadata and preview data
+ */
 export interface SectionComponent {
   metadata: SectionMetadata;
   component: React.ComponentType<any>;
   previewData: any;
 }
 
-export interface SectionRegistry {
-  [key: string]: SectionComponent;
-}
+/**
+ * Section registry - organized by section type
+ */
+export type SectionRegistry = Record<string, SectionComponent>;

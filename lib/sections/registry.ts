@@ -1,102 +1,33 @@
 import { SectionComponent, SectionRegistry } from './types';
 
-// E-Commerce Sections
-import * as EcommerceHero from './ecommerce/hero';
-
-// Portfolio Sections
-import * as PortfolioHero from './portfolio/hero';
-
-// Restaurant Sections
-import * as RestaurantMenu from './restaurant/menu';
-
-// SaaS Sections
-import * as SaasPricing from './saas/pricing';
+// Hero Sections
+import * as Hero1 from './hero/hero-1';
 
 /**
  * Central Section Registry
- *
+ * 
+ * Organized by section type (hero, footer, etc.) instead of domain
+ * 
  * To add a new section:
- * 1. Create a new folder: lib/sections/{domain}/{category}/
+ * 1. Create folder: lib/sections/{section-type}/{variation-name}/
  * 2. Add component.tsx, metadata.ts, preview-data.ts, and index.ts
  * 3. Import and register it below
  */
 export const sectionRegistry: SectionRegistry = {
-  'ecommerce-hero': {
-    metadata: EcommerceHero.metadata,
-    component: EcommerceHero.EcommerceHero,
-    previewData: EcommerceHero.previewData,
-  },
-  'portfolio-hero': {
-    metadata: PortfolioHero.metadata,
-    component: PortfolioHero.PortfolioHero,
-    previewData: PortfolioHero.previewData,
-  },
-  'restaurant-menu': {
-    metadata: RestaurantMenu.metadata,
-    component: RestaurantMenu.RestaurantMenu,
-    previewData: RestaurantMenu.previewData,
-  },
-  'saas-pricing': {
-    metadata: SaasPricing.metadata,
-    component: SaasPricing.SaasPricing,
-    previewData: SaasPricing.previewData,
+  'hero-1': {
+    metadata: Hero1.metadata,
+    component: Hero1.Hero1,
+    previewData: Hero1.previewData,
   },
 };
 
 /**
- * Get all sections organized by domain
+ * Get all sections by section type
  */
-export function getSectionsByDomain() {
-  const byDomain: Record<string, SectionComponent[]> = {};
-
-  Object.entries(sectionRegistry).forEach(([id, section]) => {
-    const domain = section.metadata.domain;
-    if (!byDomain[domain]) {
-      byDomain[domain] = [];
-    }
-    byDomain[domain].push(section);
-  });
-
-  return byDomain;
-}
-
-/**
- * Get all sections organized by domain and then by category
- */
-export function getSectionsByDomainAndCategory() {
-  const byDomainAndCategory: Record<string, Record<string, SectionComponent[]>> = {};
-
-  Object.entries(sectionRegistry).forEach(([id, section]) => {
-    const domain = section.metadata.domain;
-    const category = section.metadata.category;
-
-    if (!byDomainAndCategory[domain]) {
-      byDomainAndCategory[domain] = {};
-    }
-    if (!byDomainAndCategory[domain][category]) {
-      byDomainAndCategory[domain][category] = [];
-    }
-    byDomainAndCategory[domain][category].push(section);
-  });
-
-  return byDomainAndCategory;
-}
-
-/**
- * Get all sections organized by category
- */
-export function getSectionsByCategory() {
-  const byCategory: Record<string, SectionComponent[]> = {};
-
-  Object.entries(sectionRegistry).forEach(([id, section]) => {
-    const category = section.metadata.category;
-    if (!byCategory[category]) {
-      byCategory[category] = [];
-    }
-    byCategory[category].push(section);
-  });
-
-  return byCategory;
+export function getSectionsByType(type: string) {
+  return Object.entries(sectionRegistry)
+    .filter(([id, section]) => section.metadata.sectionType === type)
+    .map(([id, section]) => ({ id, ...section }));
 }
 
 /**
@@ -114,11 +45,15 @@ export function getAllSectionIds(): string[] {
 }
 
 /**
- * Get section metadata only
+ * Get all section types with their counts
  */
-export function getAllSectionsMetadata() {
-  return Object.entries(sectionRegistry).map(([id, section]) => ({
-    id,
-    ...section.metadata,
-  }));
+export function getSectionTypes() {
+  const types: Record<string, number> = {};
+  
+  Object.values(sectionRegistry).forEach((section) => {
+    const type = section.metadata.sectionType;
+    types[type] = (types[type] || 0) + 1;
+  });
+  
+  return types;
 }
